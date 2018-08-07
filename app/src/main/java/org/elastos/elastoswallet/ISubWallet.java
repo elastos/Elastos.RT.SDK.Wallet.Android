@@ -128,8 +128,8 @@ public class ISubWallet {
      * @param addressOrTxid filter word which can be an address or a transaction id, if empty all transactions shall be qualified.
      * @return All qualified transactions in json format.
      */
-    public String GetAllTransaction(int start, int count, String addressOrTxId) {
-        return nativeGetAllTransaction(mSubProxy, start, count, addressOrTxId);
+    public String GetAllTransaction(int start, int count, String addressOrTxid) {
+        return nativeGetAllTransaction(mSubProxy, start, count, addressOrTxid);
     }
 
     /**
@@ -149,8 +149,8 @@ public class ISubWallet {
      * @param signature signed data by a private key that correspond to the public key.
      * @return the result wrapper by a json.
      */
-    public boolean CheckSign(String address, String message, String signature) throws WalletException {
-        return nativeCheckSign(mSubProxy, address, message, signature);
+    public boolean CheckSign(String publicKey, String message, String signature) throws WalletException {
+        return nativeCheckSign(mSubProxy, publicKey, message, signature);
     }
 
     /**
@@ -185,6 +185,6 @@ public class ISubWallet {
     private native String nativeSendRawTransaction(long subProxy, String transactionJson, long fee, String payPassword);
     private native String nativeGetAllTransaction(long subProxy, int start, int count, String addressOrTxId);
     private native String nativeSign(long subProxy, String message, String payPassword);
-    private native boolean nativeCheckSign(long subProxy, String address, String message, String signature);
+    private native boolean nativeCheckSign(long subProxy, String publicKey, String message, String signature);
     private native long nativeCalculateTransactionFee(long subProxy, String rawTransaction, long feePerKb);
 }

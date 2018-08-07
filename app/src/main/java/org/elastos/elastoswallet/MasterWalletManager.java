@@ -64,7 +64,7 @@ public class MasterWalletManager {
 
     /**
      * Destroy a master wallet.
-     * @param masterWallet A pointer of master wallet interface create or imported by wallet factory object.
+     * @param masterWalletId A masterwallet's id.
      */
     public void DestroyWallet(String masterWalletId) throws WalletException {
         nativeDestroyWallet(mManagerProxy, masterWalletId);
@@ -79,9 +79,9 @@ public class MasterWalletManager {
      * @param phrasePassword combine with random seed to generate root key and chain code. Phrase password can be empty or between 8 and 128, otherwise will throw invalid argument exception.
      * @return If success will return a pointer of master wallet interface.
      */
-    public IMasterWallet ImportWalletWithKeystore(String masterWalletId, String keystoreContent,String backupPassWord
-                    ,String payPassWord, String phrasePassword) throws WalletException {
-        long masterProxy = nativeImportWalletWithKeystore(mManagerProxy, masterWalletId, keystoreContent, backupPassWord, payPassWord, phrasePassword);
+    public IMasterWallet ImportWalletWithKeystore(String masterWalletId, String keystoreContent,String backupPassword
+                    ,String payPassword, String phrasePassword) throws WalletException {
+        long masterProxy = nativeImportWalletWithKeystore(mManagerProxy, masterWalletId, keystoreContent, backupPassword, payPassword, phrasePassword);
         return new IMasterWallet(masterProxy);
     }
 
@@ -95,8 +95,8 @@ public class MasterWalletManager {
      * @return If success will return a pointer of master wallet interface.
      */
     public IMasterWallet ImportWalletWithMnemonic(String masterWalletId, String mnemonic, String phrasePassword
-                    ,String payPassWord, String language) throws WalletException {
-        long masterProxy = nativeImportWalletWithMnemonic(mManagerProxy, masterWalletId, mnemonic, phrasePassword, payPassWord, language);
+                    ,String payPassword, String language) throws WalletException {
+        long masterProxy = nativeImportWalletWithMnemonic(mManagerProxy, masterWalletId, mnemonic, phrasePassword, payPassword, language);
         return new IMasterWallet(masterProxy);
     }
 
@@ -107,8 +107,8 @@ public class MasterWalletManager {
      * @param payPassword use to decrypt and generate mnemonic temporarily. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
      * @return If success will return key store content in json format.
      */
-    public String ExportWalletWithKeystore(IMasterWallet masterWallet, String backupPassWord, String payPassword) throws WalletException {
-        return nativeExportWalletWithKeystore(mManagerProxy, masterWallet, backupPassWord, payPassword);
+    public String ExportWalletWithKeystore(IMasterWallet masterWallet, String backupPassword, String payPassword) throws WalletException {
+        return nativeExportWalletWithKeystore(mManagerProxy, masterWallet, backupPassword, payPassword);
     }
 
     /**
@@ -117,8 +117,8 @@ public class MasterWalletManager {
      * @param payPassword use to decrypt and generate mnemonic temporarily. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
      * @return If success will return the mnemonic of master wallet.
      */
-    public String ExportWalletWithMnemonic(IMasterWallet masterWallet,String backupPassWord) throws WalletException {
-        return nativeExportWalletWithMnemonic(mManagerProxy, masterWallet, backupPassWord);
+    public String ExportWalletWithMnemonic(IMasterWallet masterWallet,String payPassword) throws WalletException {
+        return nativeExportWalletWithMnemonic(mManagerProxy, masterWallet, payPassword);
     }
 
     /**

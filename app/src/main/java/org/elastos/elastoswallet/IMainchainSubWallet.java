@@ -19,9 +19,9 @@ public class IMainchainSubWallet extends ISubWallet {
      * @return　If success return the content of transaction in json format.
      */
     public String CreateDepositTransaction(String fromAddress, String toAddress, long amount, String sidechainAccounts,
-            String sidechainAmounts, String sidechainIndexs, String memo, String remark) throws WalletException {
+            String sidechainAmounts, String sidechainIndices, String memo, String remark) throws WalletException {
         return nativeCreateDepositTransaction(mMainchainProxy, fromAddress, toAddress, amount, sidechainAccounts,
-                    sidechainAmounts, sidechainIndexs, memo, remark);
+                    sidechainAmounts, sidechainIndices, memo, remark);
     }
 
     public IMainchainSubWallet(long proxy) {
