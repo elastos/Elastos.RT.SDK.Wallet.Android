@@ -1,7 +1,7 @@
 # Elastos.RT Wallet SDK　简要使用说明
 
 ## 1. Wallet构件简介
-  Elastos.RT中的Wallet构件封装了elastos在github上的Elastos.ELA.SPV.Cpp仓库的功能，可以使用提供的接口创建钱包对象、创建并发送交易等。
+  Elastos.RT(https://github.com/elastos/Elastos.RT)中的Wallet构件封装了elastos在github上的Elastos.ELA.SPV.Cpp(https://github.com/elastos/Elastos.ELA.SPV.Cpp)仓库的功能，可以使用提供的接口创建钱包对象、创建并发送交易等。
   目前，本说明文档仅描述Android平台开发流程，其他平台和环境的文档会随着开发进度同步进行更新。
 
 ## 2. Wallet SDK结构
