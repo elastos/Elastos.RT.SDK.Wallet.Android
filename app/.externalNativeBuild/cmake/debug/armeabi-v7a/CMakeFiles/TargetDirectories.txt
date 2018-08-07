@@ -1,0 +1,3 @@
+/home/wanli/ElastosRT/Elastos.RT.SDK.Wallet.Android/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/wanli/ElastosRT/Elastos.RT.SDK.Wallet.Android/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/home/wanli/ElastosRT/Elastos.RT.SDK.Wallet.Android/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/elastoswallet.dir

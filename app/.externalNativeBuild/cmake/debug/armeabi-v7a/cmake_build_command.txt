@@ -1,0 +1,16 @@
+Executable : /home/wanli/Downloads/android-sdk-linux/cmake/3.6.4111459/bin/cmake
+arguments : 
+-H/home/wanli/ElastosRT/Elastos.RT.SDK.Wallet.Android/app
+-B/home/wanli/ElastosRT/Elastos.RT.SDK.Wallet.Android/app/.externalNativeBuild/cmake/debug/armeabi-v7a
+-DANDROID_ABI=armeabi-v7a
+-DANDROID_PLATFORM=android-23
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/wanli/ElastosRT/Elastos.RT.SDK.Wallet.Android/app/build/intermediates/cmake/debug/obj/armeabi-v7a
+-DCMAKE_BUILD_TYPE=Debug
+-DANDROID_NDK=/home/wanli/workspace/ndk/android-ndk-r16b
+-DCMAKE_CXX_FLAGS=-fexceptions -frtti -std=c++11 -D_linux -D_GNUC -fvisibility=hidden -D_UNDEFDLLEXP
+-DCMAKE_TOOLCHAIN_FILE=/home/wanli/workspace/ndk/android-ndk-r16b/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/home/wanli/Downloads/android-sdk-linux/cmake/3.6.4111459/bin/ninja
+-GAndroid Gradle - Ninja
+-DANDROID_STL=c++_shared
+jvmArgs : 
+
