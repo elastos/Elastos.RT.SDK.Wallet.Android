@@ -122,9 +122,11 @@ static jstring JNICALL nativeSign(JNIEnv *env, jobject clazz, jlong jMasterProxy
     const char* payPassword = env->GetStringUTFChars(jpayPassword, NULL);
 
     IMasterWallet* masterWallet = (IMasterWallet*)jMasterProxy;
-    String result;
+    jstring retValue = NULL;
     try {
+        String result;
         masterWallet->Sign(String(message), String(payPassword), &result);
+        retValue = env->NewStringUTF(result.string());
     }
     catch (std::invalid_argument& e) {
         ThrowWalletException(env, e.what());
@@ -141,7 +143,7 @@ static jstring JNICALL nativeSign(JNIEnv *env, jobject clazz, jlong jMasterProxy
 
     env->ReleaseStringUTFChars(jmessage, message);
     env->ReleaseStringUTFChars(jpayPassword, payPassword);
-    return env->NewStringUTF(result.string());
+    return retValue;
 }
 
 //"(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"

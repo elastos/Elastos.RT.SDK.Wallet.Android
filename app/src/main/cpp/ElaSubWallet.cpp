@@ -150,11 +150,11 @@ static jstring JNICALL nativeCreateTransaction(JNIEnv *env, jobject clazz, jlong
     const char* remark = env->GetStringUTFChars(jremark, NULL);
 
     ISubWallet* subWallet = (ISubWallet*)jSubProxy;
-
-    String result;
+    jstring retValue = NULL;
     try {
+        String result;
         subWallet->CreateTransaction(String(fromAddress), String(toAddress), amount, String(memo), String(remark), &result);
-        return env->NewStringUTF(result.string());
+        retValue = env->NewStringUTF(result.string());
     }
     catch (std::invalid_argument& e) {
         ThrowWalletException(env, e.what());
@@ -173,7 +173,7 @@ static jstring JNICALL nativeCreateTransaction(JNIEnv *env, jobject clazz, jlong
     env->ReleaseStringUTFChars(jtoAddress, toAddress);
     env->ReleaseStringUTFChars(jmemo, memo);
     env->ReleaseStringUTFChars(jremark, remark);
-    return NULL;
+    return retValue;
 }
 
 static jstring JNICALL nativeCreateMultiSignAddress(JNIEnv *env, jobject clazz, jlong jSubProxy, jstring jmultiPublicKeyJson,
@@ -182,11 +182,27 @@ static jstring JNICALL nativeCreateMultiSignAddress(JNIEnv *env, jobject clazz, 
     const char* multiPublicKeyJson = env->GetStringUTFChars(jmultiPublicKeyJson, NULL);
 
     ISubWallet* subWallet = (ISubWallet*)jSubProxy;
-    String result;
-    subWallet->CreateMultiSignAddress(String(multiPublicKeyJson), totalSignNum, requiredSignNum, &result);
+    jstring retValue = NULL;
+    try {
+        String result;
+        subWallet->CreateMultiSignAddress(String(multiPublicKeyJson), totalSignNum, requiredSignNum, &result);
+        retValue = env->NewStringUTF(result.string());
+    }
+    catch (std::invalid_argument& e) {
+        ThrowWalletException(env, e.what());
+    }
+    catch (std::logic_error& e) {
+        ThrowWalletException(env, e.what());
+    }
+    catch (std::runtime_error& e) {
+        ThrowWalletException(env, e.what());
+    }
+    catch (std::exception& e) {
+        ThrowWalletException(env, e.what());
+    }
 
     env->ReleaseStringUTFChars(jmultiPublicKeyJson, multiPublicKeyJson);
-    return env->NewStringUTF(result.string());
+    return retValue;
 }
 
 //"(JLjava/lang/String;Ljava/lang/String;JJLjava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
@@ -198,11 +214,12 @@ static jstring JNICALL nativeCreateMultiSignTransaction(JNIEnv *env, jobject cla
     const char* memo = env->GetStringUTFChars(jmemo, NULL);
 
     ISubWallet* subWallet = (ISubWallet*)jSubProxy;
-    String result;
+    jstring retValue = NULL;
 
     try {
+        String result;
         subWallet->CreateMultiSignTransaction(String(fromAddress), String(toAddress), amount, String(memo), &result);
-        return env->NewStringUTF(result.string());
+        retValue = env->NewStringUTF(result.string());
     }
     catch (std::invalid_argument& e) {
         ThrowWalletException(env, e.what());
@@ -220,7 +237,7 @@ static jstring JNICALL nativeCreateMultiSignTransaction(JNIEnv *env, jobject cla
     env->ReleaseStringUTFChars(jfromAddress, fromAddress);
     env->ReleaseStringUTFChars(jtoAddress, toAddress);
     env->ReleaseStringUTFChars(jmemo, memo);
-    return NULL;
+    return retValue;
 }
 
 static jstring JNICALL nativeSendRawTransaction(JNIEnv *env, jobject clazz, jlong jSubProxy, jstring jtransactionJson
@@ -230,13 +247,12 @@ static jstring JNICALL nativeSendRawTransaction(JNIEnv *env, jobject clazz, jlon
     const char* signJson = env->GetStringUTFChars(jsignJson, NULL);
 
     ISubWallet* subWallet = (ISubWallet*)jSubProxy;
-    String result;
+    jstring retValue = NULL;
 
     try {
+        String result;
         subWallet->SendRawTransaction(String(transactionJson), jfee, String(signJson), &result);
-        env->ReleaseStringUTFChars(jtransactionJson, transactionJson);
-        env->ReleaseStringUTFChars(jsignJson, signJson);
-        return env->NewStringUTF(result.string());
+        retValue = env->NewStringUTF(result.string());
     }
     catch (std::invalid_argument& e) {
         ThrowWalletException(env, e.what());
@@ -253,7 +269,7 @@ static jstring JNICALL nativeSendRawTransaction(JNIEnv *env, jobject clazz, jlon
 
     env->ReleaseStringUTFChars(jtransactionJson, transactionJson);
     env->ReleaseStringUTFChars(jsignJson, signJson);
-    return NULL;
+    return retValue;
 }
 
 static jstring JNICALL nativeGetAllTransaction(JNIEnv *env, jobject clazz, jlong jSubProxy, jint start,
@@ -277,10 +293,12 @@ static jstring JNICALL nativeSign(JNIEnv *env, jobject clazz, jlong jSubProxy, j
     const char* payPassword = env->GetStringUTFChars(jpayPassword, NULL);
 
     ISubWallet* subWallet = (ISubWallet*)jSubProxy;
-    String result;
+    jstring retValue = NULL;
 
     try {
+        String result;
         subWallet->Sign(String(message), String(payPassword), &result);
+        retValue = env->NewStringUTF(result.string());
     }
     catch (std::invalid_argument& e) {
         ThrowWalletException(env, e.what());
@@ -297,7 +315,7 @@ static jstring JNICALL nativeSign(JNIEnv *env, jobject clazz, jlong jSubProxy, j
 
     env->ReleaseStringUTFChars(jmessage, message);
     env->ReleaseStringUTFChars(jpayPassword, payPassword);
-    return env->NewStringUTF(result.string());
+    return retValue;
 }
 
 static jstring JNICALL nativeCheckSign(JNIEnv *env, jobject clazz, jlong jSubProxy, jstring jaddress, jstring jmessage, jstring jsignature)
@@ -307,9 +325,11 @@ static jstring JNICALL nativeCheckSign(JNIEnv *env, jobject clazz, jlong jSubPro
     const char* signature = env->GetStringUTFChars(jsignature, NULL);
 
     ISubWallet* subWallet = (ISubWallet*)jSubProxy;
-    String result;
+    jstring retValue = NULL;
     try {
+        String result;
         subWallet->CheckSign(String(address), String(message), String(signature), &result);
+        retValue = env->NewStringUTF(result.string());
     }
     catch (std::invalid_argument& e) {
         ThrowWalletException(env, e.what());
@@ -327,7 +347,7 @@ static jstring JNICALL nativeCheckSign(JNIEnv *env, jobject clazz, jlong jSubPro
     env->ReleaseStringUTFChars(jaddress, address);
     env->ReleaseStringUTFChars(jmessage, message);
     env->ReleaseStringUTFChars(jsignature, signature);
-    return env->NewStringUTF(result.string());
+    return retValue;
 }
 
 static jlong JNICALL nativeCalculateTransactionFee(JNIEnv *env, jobject clazz, jlong jSubProxy, jstring jrawTransaction, jlong feePerKb)
