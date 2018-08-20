@@ -28,4 +28,9 @@ public interface ISubWalletCallback {
      * Callback method fired when block end synchronizing with a peer. This callback could be used to show progress.
      */
     public void OnBlockSyncStopped();
+
+    /**
+     * Callback method fired when subwallet was destroyed.
+     */
+    public void OnDestroyWallet();
 }

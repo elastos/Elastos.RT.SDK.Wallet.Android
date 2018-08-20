@@ -20,7 +20,7 @@ using namespace Elastos;
 static const _ELASTOS ClassID ECLSID_CDIDChecker = {
     {0x0C1A1728,0x034C,0x0D09,{0xF2,0xDC,0xFF,0xD1,0xDE,0xC6,0x0D,0x19}},
     (char *)c_pElastos_DIDUunm,
-    0x883b8772 };
+    0xdb99aa02 };
 #endif // __CLSID_CDIDChecker_DEFINED__
 
 #ifndef __ECLSID_CDIDCheckerClassObject_DEFINED__
@@ -28,7 +28,7 @@ static const _ELASTOS ClassID ECLSID_CDIDChecker = {
 static const _ELASTOS ClassID ECLSID_CDIDCheckerClassObject = {
     {0xDAF92224,0x034C,0x0D09,{0xF2,0xDC,0xD7,0x63,0xF4,0x47,0x7B,0x1B}},
     (char *)c_pElastos_DIDUunm,
-    0x883b8772 };
+    0xdb99aa02 };
 #endif // __CLSID_CDIDCheckerClassObject_DEFINED__
 
 #ifndef __ECLSID_CDIDManager_DEFINED__
@@ -36,7 +36,7 @@ static const _ELASTOS ClassID ECLSID_CDIDCheckerClassObject = {
 static const _ELASTOS ClassID ECLSID_CDIDManager = {
     {0x150B1733,0x034C,0x0D09,{0x56,0xFE,0x68,0x6F,0xE3,0x86,0x0C,0x1B}},
     (char *)c_pElastos_DIDUunm,
-    0x883b8772 };
+    0xdb99aa02 };
 #endif // __CLSID_CDIDManager_DEFINED__
 
 #ifndef __ECLSID_CDIDManagerClassObject_DEFINED__
@@ -44,7 +44,7 @@ static const _ELASTOS ClassID ECLSID_CDIDManager = {
 static const _ELASTOS ClassID ECLSID_CDIDManagerClassObject = {
     {0xE3EA223C,0x034C,0x0D09,{0x56,0xEA,0x31,0xFA,0xA3,0xBD,0x8D,0x1B}},
     (char *)c_pElastos_DIDUunm,
-    0x883b8772 };
+    0xdb99aa02 };
 #endif // __CLSID_CDIDManagerClassObject_DEFINED__
 
 #ifndef __EIID_IDID_DEFINED__

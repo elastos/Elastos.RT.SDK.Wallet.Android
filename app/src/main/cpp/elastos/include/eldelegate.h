@@ -22,13 +22,6 @@
 
 #define _Impl_Memset memset
 
-#ifndef INTEGER_DST
-#ifdef _ELASTOS64
-typedef Elastos::UInt64 INTEGER_DST;
-#else
-typedef Elastos::UInt32 INTEGER_DST;
-#endif
-#endif
 
 typedef struct _Delegate
 {
@@ -104,7 +97,7 @@ public:
     {
         if (NULL == mValue.mFunc) return NULL;
 #ifndef _GNUC
-        return (void *)((INTEGER_DST)mValue.mFunc & CallbackPtrMask);
+        return (void *)((uintptr_t)mValue.mFunc & CallbackPtrMask);
 #else
 #if defined(_arm) || defined(_x86)
         // for gnu-arm-pe compiler, it is another story
@@ -115,13 +108,13 @@ public:
         // function according to mThis and mFunc.
         //
         if (*(int*)&mValue.mFunc & 0xFFFFF000) {
-            return (void *)((INTEGER_DST)mValue.mFunc & CallbackPtrMask);
+            return (void *)((uintptr_t)mValue.mFunc & CallbackPtrMask);
         }
         else {
             mValue.mFunc = (void*)(
-                    (INTEGER_DST)(*(*(void***)mValue.mThis + ((INTEGER_DST)mValue.mFunc >> 2)))
-                    | ((INTEGER_DST)mValue.mFunc & CallbackTypeMask) );
-            return (void *)((INTEGER_DST)mValue.mFunc & CallbackPtrMask);
+                    (uintptr_t)(*(*(void***)mValue.mThis + ((uintptr_t)mValue.mFunc >> 2)))
+                    | ((uintptr_t)mValue.mFunc & CallbackTypeMask) );
+            return (void *)((uintptr_t)mValue.mFunc & CallbackPtrMask);
         }
 #else
         assert(0 && "your compiler is not support yet!\n");
@@ -132,7 +125,7 @@ public:
 
     CallbackType GetFuncType()
     {
-        return (CallbackType)(CallbackTypeMask & (INTEGER_DST)mValue.mFunc);
+        return (CallbackType)(CallbackTypeMask & (uintptr_t)mValue.mFunc);
     }
 
     static EventHandler Make(
@@ -163,7 +156,7 @@ private:
         mValue.mThis = thisPtr;
         mValue.mFunc = funcPtr;
 
-        mValue.mFunc = (_ELASTOS PVoid)((INTEGER_DST)mValue.mFunc | (CallbackTypeMask & type));
+        mValue.mFunc = (_ELASTOS PVoid)((uintptr_t)mValue.mFunc | (CallbackTypeMask & type));
         mCarObjClient = object;
     }
 

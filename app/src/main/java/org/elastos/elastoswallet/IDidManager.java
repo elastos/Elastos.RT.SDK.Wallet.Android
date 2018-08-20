@@ -36,10 +36,15 @@ public class IDidManager {
         return nativeUnregisterCallback(mDidManagerProxy, id);
     }
 
+    public void finalize() {
+        nativeDisposeNative(mDidManagerProxy);
+    }
+
     private native long nativeCreateDID(long proxy, String password);
     private native long nativeGetDID(long proxy, String didName);
     private native String nativeGetDIDList(long proxy);
     private native void nativeDestoryDID(long proxy, String didName);
     private native boolean nativeRegisterCallback(long proxy, String id, IIdManagerCallback callback);
     private native boolean nativeUnregisterCallback(long proxy, String id);
+    private native void nativeDisposeNative(long proxy);
 }

@@ -25,13 +25,14 @@ static jstring JNICALL nativeCreateWithdrawTransaction(JNIEnv *env, jobject claz
     LOGD("FUNC=[%s]=========================line=[%d], mainchainIndexs=[%s]", __FUNCTION__, __LINE__, mainchainIndexs);
 
     ISidechainSubWallet* wallet = ISidechainSubWallet::Probe((ISubWallet*)jSideSubWalletProxy);
-    String result;
+    jstring retValue = NULL;
 
     try {
+        String result;
         wallet->CreateWithdrawTransaction(String(fromAddress), String(toAddress), amount
                 , String(mainchainAccounts), String(mainchainAmounts)
                 , String(mainchainIndexs), String(memo), String(remark), &result);
-        return env->NewStringUTF(result.string());
+        retValue = env->NewStringUTF(result.string());
     }
     catch (std::invalid_argument& e) {
         ThrowWalletException(env, e.what());
@@ -53,7 +54,7 @@ static jstring JNICALL nativeCreateWithdrawTransaction(JNIEnv *env, jobject claz
     env->ReleaseStringUTFChars(jmainchainIndexs, mainchainIndexs);
     env->ReleaseStringUTFChars(jmemo, memo);
     env->ReleaseStringUTFChars(jremark, remark);
-    return NULL;
+    return retValue;
 }
 
 //"(J)Ljava/lang/String;"

@@ -18,7 +18,7 @@ using namespace Elastos;
 static const _ELASTOS ClassID ECLSID_CMasterWalletManager = {
     {0xEF8E2352,0x058C,0xCF45,{0x40,0x00,0x4A,0x79,0xC3,0x82,0x20,0x3E}},
     (char *)c_pElastos_WalletUunm,
-    0x95c7b3f9 };
+    0xeed8f64c };
 #endif // __CLSID_CMasterWalletManager_DEFINED__
 
 #ifndef __ECLSID_CMasterWalletManagerClassObject_DEFINED__
@@ -26,13 +26,13 @@ static const _ELASTOS ClassID ECLSID_CMasterWalletManager = {
 static const _ELASTOS ClassID ECLSID_CMasterWalletManagerClassObject = {
     {0x2EFE2E51,0x058C,0xCF45,{0x40,0x00,0x4A,0x79,0xC3,0x82,0x20,0x3E}},
     (char *)c_pElastos_WalletUunm,
-    0x95c7b3f9 };
+    0xeed8f64c };
 #endif // __CLSID_CMasterWalletManagerClassObject_DEFINED__
 
 #ifndef __EIID_ISubWalletListener_DEFINED__
 #define __EIID_ISubWalletListener_DEFINED__
 static const _ELASTOS InterfaceID EIID_ISubWalletListener = \
-    {0x1B2B6710,0x8712,0x2097,{0xF9,0xBE,0xE8,0x5D,0xB1,0xF6,0x8D,0xC6}};
+    {0x49E6760A,0x8712,0x2097,{0xF9,0xBE,0xE8,0x5D,0xB1,0xF6,0x8D,0xC6}};
 #endif // __IID_ISubWalletListener_DEFINED__
 
 #ifndef __EIID_ISubWallet_DEFINED__
@@ -96,7 +96,7 @@ interface ICMasterWalletManagerClassObject;
 ELAPI _Impl_AcquireCallbackHandler(PInterface pServerObj, _ELASTOS REIID iid, PInterface *ppHandler);
 ELAPI _Impl_CheckClsId(PInterface pServerObj, const _ELASTOS ClassID* pClassid, PInterface *ppServerObj);
 
-CAR_INTERFACE("1B2B6710-8712-2097-F9BE-E85DB1F68DC6")
+CAR_INTERFACE("49E6760A-8712-2097-F9BE-E85DB1F68DC6")
 ISubWalletListener : public IInterface
 {
     virtual CARAPI_(PInterface) Probe(
@@ -132,6 +132,8 @@ ISubWalletListener : public IInterface
         /* [in] */ _ELASTOS Double progress) = 0;
 
     virtual CARAPI OnBlockSyncStopped() = 0;
+
+    virtual CARAPI OnDestroyWallet() = 0;
 
 };
 CAR_INTERFACE("AE26FD03-8712-2097-F9BE-E8FD43E8CDAC")
