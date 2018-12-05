@@ -1,7 +1,6 @@
-# Elastos.RT Wallet SDK　简要使用说明
+# Elastos Wallet SDK　简要使用说明
 
 ## 1. Wallet构件简介
-  [Elastos.RT](https://github.com/elastos/Elastos.RT)中的Wallet构件封装了elastos在github上的[Elastos.ELA.SPV.Cpp](https://github.com/elastos/Elastos.ELA.SPV.Cpp)仓库的功能，可以使用提供的接口创建钱包对象、创建并发送交易等。
   目前，本说明文档仅描述Android平台开发流程，其他平台和环境的文档会随着开发进度同步进行更新。
 
 ## 2. Wallet SDK结构
@@ -31,7 +30,7 @@ String mnemonic = walletManager.GenerateMnemonic(language);
 String masterWalletId = "masterWalletId";
 String phrasePassword = "";
 String payPassword = "elastos2018";
-IMasterWallet masterWallet = walletManager.CreateMasterWallet(masterWalletId, mnemonic,　phrasePassword, payPassword, language);
+IMasterWallet masterWallet = walletManager.CreateMasterWallet(masterWalletId, mnemonic,　phrasePassword, payPassword);
 
 * 注意支付密码参数payPassword有一定的要求：不少于8位的字母与数字的组合
 * 助记词密码参数phrasePassword可以为空(null)
@@ -41,7 +40,7 @@ IMasterWallet masterWallet = walletManager.CreateMasterWallet(masterWalletId, mn
 String chainID = "ELA";
 boolean singleAddress = false;
 long feePerKb = 10000; //SELA
-ISubWallet subWallet = masterWallet.CreateSubWallet(chainID, payPassword, singleAddress, feePerKb);
+ISubWallet subWallet = masterWallet.CreateSubWallet(chainID, feePerKb);
 
 * 注意：参数feePerKb的单位是SELA
 
@@ -51,19 +50,24 @@ String toAddress = "the other address";
 long amount = 500; //ELA
 String memo = "memo";
 String remark = "remark";
-String transaction = subWallet.CreateTransaction(fromAddress, toAddress, amount, memo, remark);
+String rawTransaction = subWallet.CreateTransaction(fromAddress, toAddress, amount, memo, remark);
 
 * 注意：创建主链转账交易时，参数fromAddress可以为空(null);
 * 注意：如果子钱包subWallet中的余额小于要转出的金额的话，会抛出WalletException　异常。
 
 ### 3.7 计算交易费用
-long fee = 0;
-fee = subWallet.CalculateTransactionFee(transaction, feePerKb);
+long fee = subWallet.CalculateTransactionFee(rawTransaction, feePerKb);
 
 * 注意：参数transaction是接口CreateTransaction的返回值
 
-### 3.8 发送交易
-String transactionId = subWallet.SendRawTransaction(transaction, fee, payPassword);
+### 3.8 更新交易费用
+rawTransaction = subWallet.UpdateTransactionFee(rawTransaction, fee);
+
+### 3.9 交易签名
+rawTransaction = subWallet.SignTransaction(rawTransaction, payPassword);
+
+### 3.10 发送交易
+String transactionId = subWallet.PublishTransaction(rawTransaction);
 
 * 注意：参数transaction是接口CreateTransaction的返回值
 
