@@ -5,32 +5,57 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-include_directories(src/main/cpp/elastos/include)
-link_directories(src/main/cpp/elastos/libs)
+# Creates and names a library, sets it as either STATIC
+# or SHARED, and provides the relative paths to its source code.
+# You can define multiple libraries, and CMake builds them for you.
+# Gradle automatically packages shared libraries with your APK.
 
-set(SOURCES
-    src/main/cpp/ElasotsWalletDemo.cpp
-    src/main/cpp/ElaMasterWalletManager.cpp
-    src/main/cpp/ElaMasterWallet.cpp
-    src/main/cpp/ElaSubWallet.cpp
-    src/main/cpp/ElaMainchainSubWallet.cpp
-    src/main/cpp/ElaSidechainSubWallet.cpp
-    src/main/cpp/ElaIdChainSubWallet.cpp
-    src/main/cpp/ElaIdManagerFactory.cpp
-    src/main/cpp/ElaDidManager.cpp
-    src/main/cpp/ElaDid.cpp
-    src/main/cpp/ElaUtils.cpp
-)
+include_directories(src/main/jni/did/include)
+include_directories(src/main/jni/wallet/include)
+link_directories(src/main/jni/did/lib)
+link_directories(src/main/jni/wallet/lib)
 
-add_library(elastoswallet SHARED ${SOURCES})
+add_library( # Sets the name of the library.
+             elastoswallet
 
-target_link_libraries(elastoswallet
-    spvsdk
-    Elastos.Runtime
-    Elastos.Runtime_static
-    Elastos.CoreLibrary
-    Elastos.Wallet
-    Elastos.DID
-    idchain
-    log
-)
+             # Sets the library as a shared library.
+             SHARED
+
+             # Provides a relative path to your source file(s).
+             src/main/jni/ElaSpv.cpp
+             src/main/jni/ElaMasterWalletManager.cpp
+             src/main/jni/ElaMasterWallet.cpp
+             src/main/jni/ElaSubWallet.cpp
+             src/main/jni/ElaMainchainSubWallet.cpp
+             src/main/jni/ElaSidechainSubWallet.cpp
+             src/main/jni/ElaIdChainSubWallet.cpp
+			 src/main/jni/ElaDIDManagerSupervisor.cpp
+             src/main/jni/ElaDidManager.cpp
+             src/main/jni/ElaDid.cpp
+             src/main/jni/ElaUtils.cpp)
+
+# Searches for a specified prebuilt library and stores the path as a
+# variable. Because CMake includes system libraries in the search path by
+# default, you only need to specify the name of the public NDK library
+# you want to add. CMake verifies that the library exists before
+# completing its build.
+
+find_library( # Sets the name of the path variable.
+              log-lib
+
+              # Specifies the name of the NDK library that
+              # you want CMake to locate.
+              log )
+
+# Specifies libraries CMake should link to your target library. You
+# can link multiple libraries, such as libraries you define in this
+# build script, prebuilt third-party libraries, or system libraries.
+
+target_link_libraries( # Specifies the target library.
+                       elastoswallet
+                       spvsdk
+                       idchain
+
+                       # Links the target library to the log library
+                       # included in the NDK.
+                       ${log-lib} )

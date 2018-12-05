@@ -4,7 +4,8 @@
     "CoinIndex": 0,
     "NetType": "TestNet",
     "MinFee": 10000,
-    "BlockType": "ELA",
+    "ReconnectSeconds": 300,
+    "PluginType": "ELA",
     "GenesisAddress" : ""
   },
   "IdChain": {
@@ -12,7 +13,8 @@
     "CoinIndex": 1,
     "NetType": "TestNet",
     "MinFee": 10000,
-    "BlockType": "SideStandard",
+    "ReconnectSeconds": 300,
+    "PluginType": "SideStandard",
     "GenesisAddress" : "XKUh4GLhFJiqAMTF6HyWQrV9pK9HcGUdfJ"
   }
 }
