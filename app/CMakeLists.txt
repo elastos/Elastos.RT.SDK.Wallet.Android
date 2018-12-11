@@ -12,8 +12,10 @@ cmake_minimum_required(VERSION 3.4.1)
 
 include_directories(src/main/jni/did/include)
 include_directories(src/main/jni/wallet/include)
-link_directories(src/main/jni/did/lib)
-link_directories(src/main/jni/wallet/lib)
+#link_directories(src/main/jni/did/lib)
+#link_directories(src/main/jni/wallet/lib)
+set(wallet_library_DIR src/main/jniLibs)
+link_directories(${wallet_library_DIR}/${ANDROID_ABI})
 
 add_library( # Sets the name of the library.
              elastoswallet
@@ -54,7 +56,7 @@ find_library( # Sets the name of the path variable.
 target_link_libraries( # Specifies the target library.
                        elastoswallet
                        spvsdk
-                       idchain
+                       #idchain
 
                        # Links the target library to the log library
                        # included in the NDK.

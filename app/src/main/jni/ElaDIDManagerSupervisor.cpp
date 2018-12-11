@@ -18,7 +18,7 @@ static jlong JNICALL nativeNewDIDManagerSupervisor(JNIEnv *env, jobject clazz, j
 	DIDManagerSupervisor *supervisor = NULL;
 
 	try {
-		supervisor = new DIDManagerSupervisor(rootPath);
+//		supervisor = new DIDManagerSupervisor(rootPath);
 	} catch (std::exception &e) {
 		exception = true;
 		msgException = e.what();
