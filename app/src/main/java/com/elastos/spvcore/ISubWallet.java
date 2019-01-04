@@ -142,8 +142,8 @@ public class ISubWallet {
 	 * @param fee specify fee for miners, fee must greater or equal than 1000 (sela).
 	 * @return Sent result in json format.
 	 */
-	public String UpdateTransactionFee(String transactionJson, long fee) throws WalletException {
-		return nativeUpdateTransactionFee(mSubProxy, transactionJson, fee);
+	public String UpdateTransactionFee(String rawTransaction, long fee) throws WalletException {
+		return nativeUpdateTransactionFee(mSubProxy, rawTransaction, fee);
 	}
 
 	/**

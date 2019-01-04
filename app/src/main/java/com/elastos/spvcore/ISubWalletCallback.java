@@ -20,9 +20,9 @@ public interface ISubWalletCallback {
     /**
      * Callback method fired when best block chain height increased. This callback could be used to show progress.
      * @param currentBlockHeight is the of current block when callback fired.
-     * @param progress is current progress when block height increased.
+     * @param estimatedHeight is max height of blockheight.
      */
-    public void OnBlockHeightIncreased(int currentBlockHeight, int progress);
+    public void OnBlockSyncProgress(int currentBlockHeight, int estimatedHeight);
 
     /**
      * Callback method fired when block end synchronizing with a peer. This callback could be used to show progress.
@@ -30,4 +30,11 @@ public interface ISubWalletCallback {
     public void OnBlockSyncStopped();
 
 	public void OnBalanceChanged(long balance);
+
+	/**
+	 * @param result is json result
+	 */
+	public void OnTxPublished(String hash, String result);
+
+	public void OnTxDeleted(String hash, boolean notifyUser, boolean recommendRescan);
 }

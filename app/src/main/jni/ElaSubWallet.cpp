@@ -152,7 +152,7 @@ class ElaSubWalletCallback: public ISubWalletCallback
 		 * @param currentBlockHeight is the of current block when callback fired.
 		 * @param progress is current progress when block height increased.
 		 */
-		virtual void OnBlockHeightIncreased(uint32_t currentBlockHeight, int progress);
+		virtual void OnBlockSyncProgress(uint32_t currentBlockHeight, uint32_t estimatedHeight);
 
 		/**
 		 * Callback method fired when block end synchronizing with a peer. This callback could be used to show progress.
@@ -160,6 +160,10 @@ class ElaSubWalletCallback: public ISubWalletCallback
 		virtual void OnBlockSyncStopped();
 
 		virtual void OnBalanceChanged(uint64_t balance);
+
+		virtual void OnTxPublished(const std::string &hash, const nlohmann::json &result);
+
+		virtual void OnTxDeleted(const std::string &hash, bool notifyUser, bool recommendRescan);
 
 		ElaSubWalletCallback(
 				/* [in] */ JNIEnv* env,
@@ -641,13 +645,13 @@ void ElaSubWalletCallback::OnBlockSyncStarted()
 	Detach();
 }
 
-void ElaSubWalletCallback::OnBlockHeightIncreased(uint32_t currentBlockHeight, int progress)
+void ElaSubWalletCallback::OnBlockSyncProgress(uint32_t currentBlockHeight, uint32_t estimatedHeight)
 {
 	JNIEnv* env = GetEnv();
 
 	jclass clazz = env->GetObjectClass(mObj);
-	jmethodID methodId = env->GetMethodID(clazz, "OnBlockHeightIncreased", "(II)V");
-	env->CallVoidMethod(mObj, methodId, currentBlockHeight, progress);
+	jmethodID methodId = env->GetMethodID(clazz, "OnBlockSyncProgress", "(II)V");
+	env->CallVoidMethod(mObj, methodId, currentBlockHeight, estimatedHeight);
 
 	Detach();
 }
@@ -670,6 +674,31 @@ void ElaSubWalletCallback::OnBalanceChanged(uint64_t balance)
 	jclass clazz = env->GetObjectClass(mObj);
 	jmethodID methodId = env->GetMethodID(clazz, "OnBalanceChanged", "(J)V");
 	env->CallVoidMethod(mObj, methodId, balance);
+
+	Detach();
+}
+
+void ElaSubWalletCallback::OnTxPublished(const std::string &hash, const nlohmann::json &result)
+{
+	JNIEnv *env = GetEnv();
+
+	jclass clazz = env->GetObjectClass(mObj);
+	jmethodID methodId = env->GetMethodID(clazz, "OnTxPublished", "(Ljava/lang/String;Ljava/lang/String;)V");
+	jstring jhash = env->NewStringUTF(hash.c_str());
+	jstring jresult = env->NewStringUTF(result.dump().c_str());
+	env->CallVoidMethod(mObj, methodId, jhash, jresult);
+
+	Detach();
+}
+
+void ElaSubWalletCallback::OnTxDeleted(const std::string &hash, bool notifyUser, bool recommendRescan)
+{
+	JNIEnv *env = GetEnv();
+
+	jclass clazz = env->GetObjectClass(mObj);
+	jmethodID methodId = env->GetMethodID(clazz, "OnTxDeleted", "(Ljava/lang/String;ZZ)V");
+	jstring jhash = env->NewStringUTF(hash.c_str());
+	env->CallVoidMethod(mObj, methodId, jhash, notifyUser, recommendRescan);
 
 	Detach();
 }

@@ -467,6 +467,16 @@ static jstring JNICALL nativeExportWalletWithMnemonic(JNIEnv *env, jobject clazz
 	return result;
 }
 
+#define SIG_nativeGetVersion "(J)Ljava/lang/String;"
+static jstring JNICALL nativeGetVersion(JNIEnv *env, jobject clazz, jlong jWalletMgr)
+{
+	MasterWalletManager* walletManager = (MasterWalletManager*)jWalletMgr;
+
+	std::string version = walletManager->GetVersion();
+
+	return env->NewStringUTF(version.c_str());
+}
+
 #define SIG_nativeGetAllMasterWallets "(J)[J"
 static jlongArray JNICALL nativeGetAllMasterWallets(JNIEnv *env, jobject clazz, jlong jWalletMgr)
 {
@@ -660,6 +670,7 @@ static const JNINativeMethod gMethods[] = {
 	REGISTER_METHOD(nativeImportWalletWithMnemonic),
 	REGISTER_METHOD(nativeExportWalletWithKeystore),
 	REGISTER_METHOD(nativeExportWalletWithMnemonic),
+	REGISTER_METHOD(nativeGetVersion),
 	REGISTER_METHOD(nativeEncodeTransactionToString),
 	REGISTER_METHOD(nativeDecodeTransactionFromString),
 	REGISTER_METHOD(nativeInitMasterWalletManager),

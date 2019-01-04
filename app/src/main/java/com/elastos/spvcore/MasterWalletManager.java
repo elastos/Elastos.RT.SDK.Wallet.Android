@@ -216,15 +216,15 @@ public class MasterWalletManager {
 
 	/**
 	 * Create a multi-sign master wallet by mnemonic phrase password and related co-signers, or return existing master wallet if current master wallet manager has the master wallet id.
-	 * @param masterWalletId is the unique identification of a master wallet object.
+	 * @param masterWallet is the unique identification of a master wallet object.
 	 * @param coSigners is an array of signers' public key
 	 * @param requiredSignCount specify minimum count to accomplish related transactions.
 	 * @return If success will return a pointer of master wallet interface.
 	 */
-	public IMasterWallet CreateMultiSignMasterWallet(String masterWalletId,
+	public IMasterWallet CreateMultiSignMasterWallet(String masterWallet,
 			String coSigners, int requiredSignCount) throws WalletException {
 
-		long masterProxy = nativeCreateMultiSignMasterWallet(mManagerProxy, masterWalletId,
+		long masterProxy = nativeCreateMultiSignMasterWallet(mManagerProxy, masterWallet,
 				coSigners, requiredSignCount);
 
 		if (masterProxy == 0) {
@@ -237,17 +237,17 @@ public class MasterWalletManager {
 
 	/**
 	 * Create a multi-sign master wallet by mnemonic phrase password and related co-signers, or return existing master wallet if current master wallet manager has the master wallet id.
-	 * @param masterWalletId is the unique identification of a master wallet object.
+	 * @param masterWallet is the unique identification of a master wallet object.
 	 * @param privKey private key to do the sign job of related multi-sign accounts.
 	 * @param payPassword use to encrypt important things(such as private key) in memory. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
 	 * @param coSigners is an array of signers' public key
 	 * @param requiredSignCount specify minimum count to accomplish related transactions.
 	 * @return If success will return a pointer of master wallet interface.
 	 */
-	public IMasterWallet CreateMultiSignMasterWallet(String masterWalletId, String privKey, String payPassword,
+	public IMasterWallet CreateMultiSignMasterWallet(String masterWallet, String privKey, String payPassword,
 			String coSigners, int requiredSignCount) throws WalletException {
 
-		long masterProxy = nativeCreateMultiSignMasterWalletWithPrivKey(mManagerProxy, masterWalletId,
+		long masterProxy = nativeCreateMultiSignMasterWalletWithPrivKey(mManagerProxy, masterWallet,
 				privKey, payPassword, coSigners, requiredSignCount);
 
 		if (masterProxy == 0) {
@@ -288,6 +288,10 @@ public class MasterWalletManager {
 
 	public String DecodeTransactionFromString(String cipher) {
 		return nativeDecodeTransactionFromString(mManagerProxy, cipher);
+	}
+
+	public String GetVersion() {
+		return nativeGetVersion(mManagerProxy);
 	}
 
 	private native void nativeSaveConfigs(long proxy);
@@ -339,4 +343,6 @@ public class MasterWalletManager {
 	private native long nativeInitMasterWalletManager(String rootPath);
 
 	private native void nativeDisposeNative(long proxy);
+
+	private native String nativeGetVersion(long proxy);
 }

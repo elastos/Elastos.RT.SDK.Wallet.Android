@@ -35,6 +35,17 @@ public class IMasterWallet {
 		return list;
 	}
 
+	public ISubWallet GetSubWallet(String chainID) {
+		ArrayList<ISubWallet> subWalletList = GetAllSubWallets();
+		for (int i = 0; i < subWalletList.size(); i++) {
+			if (chainID.equals(subWalletList.get(i).GetChainId())) {
+				return subWalletList.get(i);
+			}
+		}
+
+		return null;
+	}
+
 	public ISubWallet CreateSubWallet(String chainID, long feePerKb) throws WalletException {
 		if ((!CHAINID.MAIN.equals(chainID)) && (!CHAINID.ID.equals(chainID))) {
 			throw new WalletException("Not support the other sidechain now.");
@@ -72,13 +83,11 @@ public class IMasterWallet {
 		throw new WalletException("Not support the other sidechain now");
 	}
 
-    public void DestroyWallet(ISubWallet wallet)
-    {
+    public void DestroyWallet(ISubWallet wallet) {
         nativeDestroyWallet(mMasterProxy, wallet.getProxy());
     }
 
-    public String GetPublicKey()
-    {
+    public String GetPublicKey() {
         return nativeGetPublicKey(mMasterProxy);
     }
 
