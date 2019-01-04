@@ -8,7 +8,7 @@ import java.io.OutputStream;
 public class ElastosWalletUtils {
 	static {
 		System.loadLibrary("spvsdk");
-		System.loadLibrary("idchain");
+//		System.loadLibrary("idchain");
 		System.loadLibrary("elastoswallet");
 	}
 
