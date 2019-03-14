@@ -8,33 +8,27 @@
 
 using namespace Elastos::ElaWallet;
 
-#define SIG_nativeCreateWithdrawTransaction "(JLjava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+#define SIG_nativeCreateWithdrawTransaction "(JLjava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
 static jstring JNICALL nativeCreateWithdrawTransaction(JNIEnv *env, jobject clazz, jlong jSideSubWalletProxy,
 		jstring jfromAddress,
 		jlong amount,
-		jstring jmainchainAccounts,
-		jstring jmainchainAmounts,
-		jstring jmainchainIndexs,
+		jstring jmainChainAddress,
 		jstring jmemo,
 		jstring jremark)
 {
 	bool exception = false;
 	std::string msgException;
 
-	const char* fromAddress = env->GetStringUTFChars(jfromAddress, NULL);
-	const char* mainchainAccounts = env->GetStringUTFChars(jmainchainAccounts, NULL);
-	const char* mainchainAmounts = env->GetStringUTFChars(jmainchainAmounts, NULL);
-	const char* mainchainIndexs = env->GetStringUTFChars(jmainchainIndexs, NULL);
-	const char* memo = env->GetStringUTFChars(jmemo, NULL);
-	const char* remark = env->GetStringUTFChars(jremark, NULL);
+	const char *fromAddress      = env->GetStringUTFChars(jfromAddress, NULL);
+	const char *mainChainAddress = env->GetStringUTFChars(jmainChainAddress, NULL);
+	const char *memo             = env->GetStringUTFChars(jmemo, NULL);
+	const char *remark           = env->GetStringUTFChars(jremark, NULL);
 
 	ISidechainSubWallet* wallet = (ISidechainSubWallet*)jSideSubWalletProxy;
 	jstring tx = NULL;
 
 	try {
-		nlohmann::json txJson = wallet->CreateWithdrawTransaction(fromAddress, amount,
-				nlohmann::json::parse(mainchainAccounts), nlohmann::json::parse(mainchainAmounts),
-				nlohmann::json::parse(mainchainIndexs), memo, remark);
+		nlohmann::json txJson = wallet->CreateWithdrawTransaction(fromAddress, amount, mainChainAddress, memo, remark);
 
 		tx = env->NewStringUTF(txJson.dump().c_str());
 	} catch (std::exception &e) {
@@ -43,9 +37,7 @@ static jstring JNICALL nativeCreateWithdrawTransaction(JNIEnv *env, jobject claz
 	}
 
 	env->ReleaseStringUTFChars(jfromAddress, fromAddress);
-	env->ReleaseStringUTFChars(jmainchainAccounts, mainchainAccounts);
-	env->ReleaseStringUTFChars(jmainchainAmounts, mainchainAmounts);
-	env->ReleaseStringUTFChars(jmainchainIndexs, mainchainIndexs);
+	env->ReleaseStringUTFChars(jmainChainAddress, mainChainAddress);
 	env->ReleaseStringUTFChars(jmemo, memo);
 	env->ReleaseStringUTFChars(jremark, remark);
 

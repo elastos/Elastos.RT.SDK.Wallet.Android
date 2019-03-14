@@ -13,6 +13,7 @@ static jstring JNICALL nativeGetDIDName(JNIEnv *env, jobject clazz, jlong jDidPr
 {
 	jstring idName = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID *did = (IDID*)jDidProxy;
 		std::string value = did->GetDIDName();
@@ -20,6 +21,7 @@ static jstring JNICALL nativeGetDIDName(JNIEnv *env, jobject clazz, jlong jDidPr
 	} catch (std::exception &e) {
 		ThrowWalletException(env, e.what());
 	}
+#endif
 
 	return idName;
 }
@@ -35,6 +37,7 @@ static void JNICALL nativeSetValue(JNIEnv *env, jobject clazz, jlong jDidProxy,
 	const char* keyPath = env->GetStringUTFChars(jkeyPath, NULL);
 	const char* valueJson = env->GetStringUTFChars(jvalueJson, NULL);
 
+#ifdef ENABLE_DID
 	try {
 		IDID* did = (IDID*)jDidProxy;
 		did->SetValue(keyPath, nlohmann::json::parse(valueJson));
@@ -42,6 +45,7 @@ static void JNICALL nativeSetValue(JNIEnv *env, jobject clazz, jlong jDidProxy,
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jkeyPath, keyPath);
 	env->ReleaseStringUTFChars(jvalueJson, valueJson);
@@ -61,6 +65,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetValue(JNIEnv *env, jobject cl
 	const char* path = env->GetStringUTFChars(jpath, NULL);
 	jstring value = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID* did = (IDID*)jDidProxy;
 		nlohmann::json jsonValue = did->GetValue(path);
@@ -69,6 +74,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetValue(JNIEnv *env, jobject cl
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jpath, path);
 
@@ -89,6 +95,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetHistoryValue(JNIEnv *env, job
 	const char* keyPath = env->GetStringUTFChars(jkeyPath, NULL);
 	jstring value = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID* did = (IDID*)jDidProxy;
 		nlohmann::json jsonValue = did->GetHistoryValue(keyPath);
@@ -97,6 +104,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetHistoryValue(JNIEnv *env, job
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jkeyPath, keyPath);
 
@@ -114,6 +122,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetAllKeys(JNIEnv *env, jobject 
 {
 	jstring keys = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID* did = (IDID*)jDidProxy;
 		nlohmann::json jsonValue = did->GetAllKeys(jstart, jcount);
@@ -121,6 +130,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetAllKeys(JNIEnv *env, jobject 
 	} catch (std::exception &e) {
 		ThrowWalletException(env, e.what());
 	}
+#endif
 
 	return keys;
 }
@@ -137,6 +147,7 @@ static jstring JNICALL nativeSign(JNIEnv *env, jobject clazz, jlong jDidProxy,
 	const char* password = env->GetStringUTFChars(jpassword, NULL);
 	jstring result = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID* did = (IDID*)jDidProxy;
 		std::string r = did->Sign(message, password);
@@ -145,6 +156,7 @@ static jstring JNICALL nativeSign(JNIEnv *env, jobject clazz, jlong jDidProxy,
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jmessage, message);
 	env->ReleaseStringUTFChars(jpassword, password);
@@ -169,6 +181,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeCheckSign(JNIEnv *env, jobject c
 
 	jstring result = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID *did = (IDID *)jDidProxy;
 		nlohmann::json r = did->CheckSign(message, signature);
@@ -177,6 +190,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeCheckSign(JNIEnv *env, jobject c
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jmessage, message);
 	env->ReleaseStringUTFChars(jsignature, signature);
@@ -193,6 +207,7 @@ static jstring JNICALL nativeGetPublicKey(JNIEnv *env, jobject clazz, jlong jDid
 {
 	jstring key = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID *did = (IDID *)jDidProxy;
 		std::string value = did->GetPublicKey();
@@ -200,6 +215,7 @@ static jstring JNICALL nativeGetPublicKey(JNIEnv *env, jobject clazz, jlong jDid
 	} catch (std::exception &e) {
 		ThrowWalletException(env, e.what());
 	}
+#endif
 
 	return key;
 }
@@ -216,6 +232,7 @@ static jstring JNICALL nativeGenerateProgram(JNIEnv *env, jobject clazz, jlong j
 	const char *password = env->GetStringUTFChars(jpassword, NULL);
 	jstring program = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDID* did = (IDID *)jDidProxy;
 		nlohmann::json jsonValue = did->GenerateProgram(message, password);
@@ -224,6 +241,7 @@ static jstring JNICALL nativeGenerateProgram(JNIEnv *env, jobject clazz, jlong j
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jmessage, message);
 	env->ReleaseStringUTFChars(jpassword, password);

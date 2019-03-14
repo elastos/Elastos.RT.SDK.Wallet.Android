@@ -13,22 +13,27 @@ static jlong JNICALL nativeNewDIDManagerSupervisor(JNIEnv *env, jobject clazz, j
 {
 	bool exception = false;
 	std::string msgException;
+	jlong result = 0;
 
 	const char* rootPath = env->GetStringUTFChars(jrootPath, NULL);
+
+#ifdef ENABLE_DID
 	DIDManagerSupervisor *supervisor = NULL;
 
 	try {
-//		supervisor = new DIDManagerSupervisor(rootPath);
+		supervisor = new DIDManagerSupervisor(rootPath);
+		result = (jlong) supervisor;
 	} catch (std::exception &e) {
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	if (exception) {
 		ThrowWalletException(env, msgException.c_str());
 	}
 
-	return (jlong) supervisor;
+	return result;
 }
 
 #define SIG_nativeDisposeNative "(J)V"
@@ -37,6 +42,7 @@ static void JNICALL nativeDisposeNative(JNIEnv *env, jobject clazz, jlong jSuper
 	bool exception = false;
 	std::string msgException;
 
+#ifdef ENABLE_DID
 	try {
 		DIDManagerSupervisor *supervisor = (DIDManagerSupervisor *) jSupervisor;
 		delete supervisor;
@@ -44,6 +50,7 @@ static void JNICALL nativeDisposeNative(JNIEnv *env, jobject clazz, jlong jSuper
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	if (exception) {
 		ThrowWalletException(env, msgException.c_str());
@@ -56,19 +63,23 @@ static jlong JNICALL nativeCreateDIDManager(JNIEnv *env, jobject clazz, jlong jS
 {
 	bool exception = false;
 	std::string msgException;
+	jlong result = 0;
 
 	const char *rootPath = env->GetStringUTFChars(jrootPath, NULL);
 	IDIDManager *manager = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		DIDManagerSupervisor *supervisor = (DIDManagerSupervisor *) jSupervisor;
 		IMasterWallet *masterWallet = (IMasterWallet *) jMasterWallet;
 
 		manager = supervisor->CreateDIDManager(masterWallet, rootPath);
+		result = (jlong)manager;
 	} catch (std::exception &e) {
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jrootPath, rootPath);
 
@@ -76,7 +87,7 @@ static jlong JNICALL nativeCreateDIDManager(JNIEnv *env, jobject clazz, jlong jS
 		ThrowWalletException(env, msgException.c_str());
 	}
 
-	return (jlong)manager;
+	return result;
 }
 
 #define SIG_nativeDestroyDIDManager "(JJ)V"
@@ -86,6 +97,7 @@ static void JNICALL nativeDestroyDIDManager(JNIEnv *env, jobject clazz, jlong jS
 	bool exception = false;
 	std::string msgException;
 
+#ifdef ENABLE_DID
 	try {
 		DIDManagerSupervisor *supervisor = (DIDManagerSupervisor *) jSupervisor;
 		IDIDManager *manager = (IDIDManager *) jIDManager;
@@ -95,6 +107,7 @@ static void JNICALL nativeDestroyDIDManager(JNIEnv *env, jobject clazz, jlong jS
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	if (exception) {
 		ThrowWalletException(env, msgException.c_str());

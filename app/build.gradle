@@ -16,7 +16,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                cppFlags "-fexceptions -frtti -std=c++11 -D_linux -D_GNUC -fvisibility=hidden -D_UNDEFDLLEXP"
+                cppFlags "-Wl,--no-warn-search-mismatch -fexceptions -frtti -std=c++11 -D_linux -D_GNUC -fvisibility=hidden -D_UNDEFDLLEXP"
                 arguments "-DANDROID_STL=c++_shared"
             }
         }
@@ -30,6 +30,19 @@ android {
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
+        }
+    }
+
+    android.libraryVariants.all { variant ->
+        variant.outputs.all {
+            def fileName = "org.elastos.wallet-" + variant.buildType.name + '.aar'
+            outputFileName = fileName
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 }

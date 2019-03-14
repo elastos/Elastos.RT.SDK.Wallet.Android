@@ -5,5 +5,5 @@
 /local.properties
 .idea
 /build
-.externalNativeBuild
+app/.externalNativeBuild
 
