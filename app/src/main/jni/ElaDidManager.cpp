@@ -135,7 +135,7 @@ class ElaIdManagerCallback: public IIdManagerCallback
 };
 #endif
 
-#define SIG_nativeRegisterCallback "(JLjava/lang/String;Lcom/elastos/spvcore/IIdManagerCallback;)Z"
+#define SIG_nativeRegisterCallback "(JLjava/lang/String;Lorg/elastos/spvcore/IIdManagerCallback;)Z"
 #ifdef ENABLE_DID
 static std::map<jstring, ElaIdManagerCallback*> sIdCallbackMap;
 #endif
@@ -219,7 +219,7 @@ static const JNINativeMethod gMethods[] = {
 
 jint register_elastos_spv_IDidManager(JNIEnv *env)
 {
-	return jniRegisterNativeMethods(env, "com/elastos/spvcore/IDidManager",
+	return jniRegisterNativeMethods(env, "org/elastos/spvcore/IDidManager",
 			gMethods, NELEM(gMethods));
 }
 

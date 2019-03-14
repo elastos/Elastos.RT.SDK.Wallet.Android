@@ -5,7 +5,7 @@
 
 #include "ElaUtils.h"
 
-const char* WALLETEXCEPTION = "com/elastos/spvcore/WalletException";
+const char* WALLETEXCEPTION = "org/elastos/spvcore/WalletException";
 void ThrowLogicException(JNIEnv* env, const char* errorInfo)
 {
     jclass walletException = env->FindClass(WALLETEXCEPTION);

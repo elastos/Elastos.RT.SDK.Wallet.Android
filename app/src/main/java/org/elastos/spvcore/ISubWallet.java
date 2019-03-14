@@ -1,5 +1,5 @@
 
-package com.elastos.spvcore;
+package org.elastos.spvcore;
 
 /**
  * ISubWallet
@@ -51,12 +51,8 @@ public class ISubWallet {
         return nativeGetBalanceInfo(mSubProxy);
     }
 
-	/**
-	 * Get sum of balances of all addresses.
-	 * @return sum of balances.
-	 */
-    public long GetBalance() throws WalletException {
-        return nativeGetBalance(mSubProxy);
+    public long GetBalance(int balanceType) throws WalletException {
+        return nativeGetBalance(mSubProxy, balanceType);
     }
 
 	/**
@@ -77,13 +73,8 @@ public class ISubWallet {
         return nativeGetAllAddress(mSubProxy, start, count);
     }
 
-	/**
-	 * Get balance of only the specified address.
-	 * @param address is one of addresses created by current sub wallet.
-	 * @return balance of specified address.
-	 */
-    public long GetBalanceWithAddress(String address) throws WalletException {
-        return nativeGetBalanceWithAddress(mSubProxy, address);
+    public long GetBalanceWithAddress(String address, int balanceType) throws WalletException {
+        return nativeGetBalanceWithAddress(mSubProxy, address, balanceType);
     }
 
 	/**
@@ -101,29 +92,12 @@ public class ISubWallet {
         nativeRemoveCallback(mSubProxy);
     }
 
-	/**
-	 * Create a normal transaction and return the content of transaction in json format.
-	 * @param fromAddress specify which address we want to spend, or just input empty string to let wallet choose UTXOs automatically.
-	 * @param toAddress specify which address we want to send.
-	 * @param amount specify amount we want to send.
-	 * @param memo input memo attribute for describing.
-	 * @param remark is used to record message of local wallet.
-	 * @return If success return the content of transaction in json format.
-	 */
-    public String CreateTransaction(String fromAddress, String toAddress, long amount, String memo, String remark) throws WalletException {
-        return nativeCreateTransaction(mSubProxy, fromAddress, toAddress, amount, memo, remark);
+    public String CreateTransaction(String fromAddress, String toAddress, long amount, String memo, String remark, boolean useVotedUTXO) throws WalletException {
+        return nativeCreateTransaction(mSubProxy, fromAddress, toAddress, amount, memo, remark, useVotedUTXO);
     }
 
-	/**
-	 * Create a multi-sign transaction and return the content of transaction in json format.
-	 * @param fromAddress specify which address we want to spend, or just input empty string to let wallet choose UTXOs automatically.
-	 * @param toAddress specify which address we want to send.
-	 * @param amount specify amount we want to send.
-	 * @param memo input memo attribute for describing.
-	 * @return If success return the content of transaction in json format.
-	 */
-    public String CreateMultiSignTransaction(String fromAddress, String toAddress, long amount, String memo) throws WalletException {
-        return nativeCreateMultiSignTransaction(mSubProxy, fromAddress, toAddress, amount, memo);
+    public String CreateMultiSignTransaction(String fromAddress, String toAddress, long amount, String memo, String remark, boolean useVotedUTXO) throws WalletException {
+        return nativeCreateMultiSignTransaction(mSubProxy, fromAddress, toAddress, amount, memo, remark, useVotedUTXO);
     }
 
 	/**
@@ -136,14 +110,8 @@ public class ISubWallet {
         return nativeCalculateTransactionFee(mSubProxy, rawTransaction, feePerKb);
     }
 
-	/**
-	 * Update a transaction by change fee
-	 * @param transactionJson content of transaction in json format.
-	 * @param fee specify fee for miners, fee must greater or equal than 1000 (sela).
-	 * @return Sent result in json format.
-	 */
-	public String UpdateTransactionFee(String rawTransaction, long fee) throws WalletException {
-		return nativeUpdateTransactionFee(mSubProxy, rawTransaction, fee);
+	public String UpdateTransactionFee(String rawTransaction, long fee, String fromAddress) throws WalletException {
+		return nativeUpdateTransactionFee(mSubProxy, rawTransaction, fee, fromAddress);
 	}
 
 	/**
@@ -201,14 +169,7 @@ public class ISubWallet {
         return nativeSign(mSubProxy, message, payPassword);
     }
 
-	/**
-	 * Verify signature by public key and raw message. This method can check signatures signed by any private keys not just the root private key of the master wallet.
-	 * @param publicKey belong to the private key signed the signature.
-	 * @param message raw data.
-	 * @param signature signed data by a private key that correspond to the public key.
-	 * @return the result wrapper by a json.
-	 */
-    public String CheckSign(String publicKey, String message, String signature) throws WalletException {
+    public boolean CheckSign(String publicKey, String message, String signature) throws WalletException {
         return nativeCheckSign(mSubProxy, publicKey, message, signature);
     }
 
@@ -231,21 +192,21 @@ public class ISubWallet {
     private native String nativeGetChainId(long subProxy);
     private native String nativeGetBasicInfo(long subProxy);
     private native String nativeGetBalanceInfo(long subProxy);
-    private native long nativeGetBalance(long subProxy);
+    private native long nativeGetBalance(long subProxy, int balanceType);
     private native String nativeCreateAddress(long subProxy);
-    private native String nativeGetAllAddress(long subProxy, int start,int count);
-    private native long nativeGetBalanceWithAddress(long subProxy, String address);
+    private native String nativeGetAllAddress(long subProxy, int start, int count);
+    private native long nativeGetBalanceWithAddress(long subProxy, String address, int balanceType);
     private native void nativeAddCallback(long subProxy, ISubWalletCallback subCallback);
     private native void nativeRemoveCallback(long subProxy);
-    private native String nativeCreateTransaction(long subProxy, String fromAddress, String toAddress, long amount, String memo, String remark);
-    private native String nativeCreateMultiSignTransaction(long subProxy, String fromAddress, String toAddress, long amount, String memo);
+    private native String nativeCreateTransaction(long subProxy, String fromAddress, String toAddress, long amount, String memo, String remark, boolean useVotedUTXO);
+    private native String nativeCreateMultiSignTransaction(long subProxy, String fromAddress, String toAddress, long amount, String memo, String remark, boolean useVotedUTXO);
     private native long nativeCalculateTransactionFee(long subProxy, String rawTransaction, long feePerKb);
-	private native String nativeUpdateTransactionFee(long subProxy, String rawTransaction, long fee);
+	private native String nativeUpdateTransactionFee(long subProxy, String rawTransaction, long fee, String fromAddress);
 	private native String nativeSignTransaction(long subProxy, String rawTransaction, String payPassword);
 	private native String nativeGetTransactionSignedSigners(long subProxy, String rawTransaction);
 	private native String nativePublishTransaction(long subProxy, String rawTransaction);
     private native String nativeGetAllTransaction(long subProxy, int start, int count, String addressOrTxId);
     private native String nativeSign(long subProxy, String message, String payPassword);
-    private native String nativeCheckSign(long subProxy, String publicKey, String message, String signature);
+    private native boolean nativeCheckSign(long subProxy, String publicKey, String message, String signature);
 	private native String nativeGetPublicKey(long jSubProxy);
 }

@@ -1,4 +1,4 @@
-package com.elastos.spvcore;
+package org.elastos.spvcore;
 
 import android.content.Context;
 import java.io.FileOutputStream;

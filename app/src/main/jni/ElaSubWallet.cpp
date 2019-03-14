@@ -9,7 +9,7 @@
 
 using namespace Elastos::ElaWallet;
 
-#define  CLASS_SUBWALLET   "com/elastos/spvcore/ISubWallet"
+#define  CLASS_SUBWALLET   "org/elastos/spvcore/ISubWallet"
 #define  FIELD_SUBWALLET   "mSubProxy"
 
 #define SIG_nativeGetChainId "(J)Ljava/lang/String;"
@@ -183,7 +183,7 @@ class ElaSubWalletCallback: public ISubWalletCallback
 
 
 static std::map<jlong, ElaSubWalletCallback*> sSubCallbackMap;
-#define SIG_nativeAddCallback "(JLcom/elastos/spvcore/ISubWalletCallback;)V"
+#define SIG_nativeAddCallback "(JLorg/elastos/spvcore/ISubWalletCallback;)V"
 static void JNICALL nativeAddCallback(JNIEnv *env, jobject clazz, jlong jSubProxy,
 		jobject jsubCallback)
 {
@@ -594,7 +594,7 @@ static const JNINativeMethod gMethods[] = {
 
 jint register_elastos_spv_ISubWallet(JNIEnv *env)
 {
-	return jniRegisterNativeMethods(env, "com/elastos/spvcore/ISubWallet",
+	return jniRegisterNativeMethods(env, "org/elastos/spvcore/ISubWallet",
 			gMethods, NELEM(gMethods));
 }
 

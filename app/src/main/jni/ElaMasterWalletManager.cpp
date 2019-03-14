@@ -7,7 +7,7 @@
 
 using namespace Elastos::ElaWallet;
 
-#define  CLASS_MASTERWALLET   "com/elastos/spvcore/IMasterWallet"
+#define  CLASS_MASTERWALLET   "org/elastos/spvcore/IMasterWallet"
 #define  FIELD_MASTERWALLET   "mMasterProxy"
 
 #define SIG_nativeGenerateMnemonic "(JLjava/lang/String;)Ljava/lang/String;"
@@ -393,7 +393,7 @@ static jlong JNICALL nativeImportWalletWithMnemonic(JNIEnv *env, jobject clazz, 
 	return (jlong)masterWallet;
 }
 
-#define SIG_nativeExportWalletWithKeystore "(JLcom/elastos/spvcore/IMasterWallet;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+#define SIG_nativeExportWalletWithKeystore "(JLorg/elastos/spvcore/IMasterWallet;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
 static jstring JNICALL nativeExportWalletWithKeystore(JNIEnv *env, jobject clazz, jlong jWalletMgr,
 		jobject jmasterWallet,
 		jstring jbackupPassword,
@@ -431,7 +431,7 @@ static jstring JNICALL nativeExportWalletWithKeystore(JNIEnv *env, jobject clazz
 	return result;
 }
 
-#define SIG_nativeExportWalletWithMnemonic "(JLcom/elastos/spvcore/IMasterWallet;Ljava/lang/String;)Ljava/lang/String;"
+#define SIG_nativeExportWalletWithMnemonic "(JLorg/elastos/spvcore/IMasterWallet;Ljava/lang/String;)Ljava/lang/String;"
 static jstring JNICALL nativeExportWalletWithMnemonic(JNIEnv *env, jobject clazz, jlong jWalletMgr,
 		jobject jmasterWallet,
 		jstring jpayPassword)
@@ -680,7 +680,7 @@ static const JNINativeMethod gMethods[] = {
 int register_elastos_spv_IMasterWalletManager(JNIEnv *env)
 {
 	return jniRegisterNativeMethods(env,
-			"com/elastos/spvcore/MasterWalletManager",
+			"org/elastos/spvcore/MasterWalletManager",
 			gMethods, NELEM(gMethods));
 }
 

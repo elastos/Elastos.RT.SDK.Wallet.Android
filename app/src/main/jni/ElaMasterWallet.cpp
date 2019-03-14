@@ -7,8 +7,8 @@
 #include "nlohmann/json.hpp"
 
 using namespace Elastos::ElaWallet;
-#define CLASS_MCSUBWALLET   "com/elastos/spvcore/IMainchainSubWallet"
-#define CLASS_IDSUBWALLET   "com/elastos/spvcore/IIdChainSubWallet"
+#define CLASS_MCSUBWALLET   "org/elastos/spvcore/IMainchainSubWallet"
+#define CLASS_IDSUBWALLET   "org/elastos/spvcore/IIdChainSubWallet"
 #define CHAINID_MAINCHAIN "ELA"
 #define CHAINID_IDCHAIN "IdChain"
 
@@ -298,7 +298,7 @@ static const JNINativeMethod gMethods[] = {
 jint register_elastos_spv_IMasterWallet(JNIEnv *env)
 {
 	return jniRegisterNativeMethods(env,
-			"com/elastos/spvcore/IMasterWallet",
+			"org/elastos/spvcore/IMasterWallet",
 			gMethods, NELEM(gMethods));
 }
 

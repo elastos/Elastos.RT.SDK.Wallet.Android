@@ -124,7 +124,7 @@ static const JNINativeMethod gMethods[] = {
 jint register_elastos_spv_DIDManagerSupervisor(JNIEnv *env)
 {
 	return jniRegisterNativeMethods(env,
-			"com/elastos/spvcore/DIDManagerSupervisor",
+			"org/elastos/spvcore/DIDManagerSupervisor",
 			gMethods, NELEM(gMethods));
 }
 

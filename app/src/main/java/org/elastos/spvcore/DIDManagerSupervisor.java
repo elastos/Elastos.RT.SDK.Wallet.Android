@@ -1,5 +1,5 @@
 
-package com.elastos.spvcore;
+package org.elastos.spvcore;
 
 
 public class DIDManagerSupervisor {
