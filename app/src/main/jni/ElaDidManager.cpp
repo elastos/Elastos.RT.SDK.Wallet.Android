@@ -12,17 +12,21 @@ static jlong JNICALL nativeCreateDID(JNIEnv *env, jobject clazz, jlong jDidMgrPr
 {
 	bool exception = false;
 	std::string msgException;
+	jlong result = 0;
 
 	const char *password = env->GetStringUTFChars(jpassword, NULL);
-	IDID *did = NULL;
 
+#ifdef ENABLE_DID
+	IDID *did = NULL;
 	try {
 		IDIDManager* didMgr = (IDIDManager*)jDidMgrProxy;
 		did = didMgr->CreateDID(password);
+		result = (jlong) did;
 	} catch (std::exception &e) {
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jpassword, password);
 
@@ -30,7 +34,7 @@ static jlong JNICALL nativeCreateDID(JNIEnv *env, jobject clazz, jlong jDidMgrPr
 		ThrowWalletException(env, msgException.c_str());
 	}
 
-	return (jlong)did;
+	return result;
 }
 
 #define SIG_nativeGetDID "(JLjava/lang/String;)J"
@@ -38,17 +42,21 @@ static jlong JNICALL nativeGetDID(JNIEnv *env, jobject clazz, jlong jDidMgrProxy
 {
 	bool exception = false;
 	std::string msgException;
+	jlong result = 0;
 
 	const char *didName = env->GetStringUTFChars(jdidName, NULL);
+#ifdef ENABLE_DID
 	IDID* did = NULL;
 
 	try {
 		IDIDManager* didMgr = (IDIDManager*)jDidMgrProxy;
 		did = didMgr->GetDID(didName);
+		result = (jlong) did;
 	} catch (std::exception &e) {
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jdidName, didName);
 
@@ -56,7 +64,7 @@ static jlong JNICALL nativeGetDID(JNIEnv *env, jobject clazz, jlong jDidMgrProxy
 		ThrowWalletException(env, msgException.c_str());
 	}
 
-	return (jlong)did;
+	return result;
 }
 
 #define SIG_nativeGetDIDList "(J)Ljava/lang/String;"
@@ -64,6 +72,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetDIDList(JNIEnv *env, jobject 
 {
 	jstring list = NULL;
 
+#ifdef ENABLE_DID
 	try {
 		IDIDManager* didMgr = (IDIDManager*)jDidMgrProxy;
 		nlohmann::json jsonValue = didMgr->GetDIDList();
@@ -71,6 +80,7 @@ static /*nlohmann::json*/ jstring JNICALL nativeGetDIDList(JNIEnv *env, jobject 
 	} catch (std::exception &e) {
 		ThrowWalletException(env, e.what());
 	}
+#endif
 
 	return list;
 }
@@ -83,6 +93,7 @@ static void JNICALL nativeDestoryDID(JNIEnv *env, jobject clazz, jlong jDidMgrPr
 
 	const char *didName = env->GetStringUTFChars(jdidName, NULL);
 
+#ifdef ENABLE_DID
 	try {
 		IDIDManager *didMgr = (IDIDManager*)jDidMgrProxy;
 		didMgr->DestoryDID(didName);
@@ -90,6 +101,7 @@ static void JNICALL nativeDestoryDID(JNIEnv *env, jobject clazz, jlong jDidMgrPr
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jdidName, didName);
 
@@ -98,6 +110,7 @@ static void JNICALL nativeDestoryDID(JNIEnv *env, jobject clazz, jlong jDidMgrPr
 	}
 }
 
+#ifdef ENABLE_DID
 class ElaIdManagerCallback: public IIdManagerCallback
 {
 	public:
@@ -120,18 +133,22 @@ class ElaIdManagerCallback: public IIdManagerCallback
 		JavaVM* mVM;
 		jobject mObj;
 };
+#endif
 
 #define SIG_nativeRegisterCallback "(JLjava/lang/String;Lcom/elastos/spvcore/IIdManagerCallback;)Z"
+#ifdef ENABLE_DID
 static std::map<jstring, ElaIdManagerCallback*> sIdCallbackMap;
+#endif
 static jboolean JNICALL nativeRegisterCallback(JNIEnv *env, jobject clazz, jlong jDidMgrProxy, jstring jdidName, jobject jidCallback)
 {
 	bool exception = false;
+	jboolean status = false;
 	std::string msgException;
 
 	const char* didName = env->GetStringUTFChars(jdidName, NULL);
+#ifdef ENABLE_DID
 	ElaIdManagerCallback *idCallback = new ElaIdManagerCallback(env, jidCallback);
 	IDIDManager* didMgr = (IDIDManager*)jDidMgrProxy;
-	jboolean status = false;
 
 	try {
 		status = didMgr->RegisterCallback(didName, idCallback);
@@ -140,11 +157,14 @@ static jboolean JNICALL nativeRegisterCallback(JNIEnv *env, jobject clazz, jlong
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jdidName, didName);
 
 	if (exception) {
+#ifdef ENABLE_DID
 		delete idCallback;
+#endif
 		ThrowWalletException(env, msgException.c_str());
 	}
 
@@ -161,6 +181,7 @@ static jboolean JNICALL nativeUnregisterCallback(JNIEnv *env, jobject clazz, jlo
 
 	jboolean status = false;
 
+#ifdef ENABLE_DID
 	try {
 		IDIDManager* didMgr = (IDIDManager*)jDidMgrProxy;
 		std::map<jstring, ElaIdManagerCallback*>::iterator it;
@@ -176,6 +197,7 @@ static jboolean JNICALL nativeUnregisterCallback(JNIEnv *env, jobject clazz, jlo
 		exception = true;
 		msgException = e.what();
 	}
+#endif
 
 	env->ReleaseStringUTFChars(jdidName, didName);
 
@@ -201,6 +223,7 @@ jint register_elastos_spv_IDidManager(JNIEnv *env)
 			gMethods, NELEM(gMethods));
 }
 
+#ifdef ENABLE_DID
 ElaIdManagerCallback::ElaIdManagerCallback(
 		/* [in] */ JNIEnv* env,
 		/* [in] */ jobject jobj)
@@ -245,3 +268,4 @@ void ElaIdManagerCallback::OnIdStatusChanged(const std::string &id,
 
 	Detach();
 }
+#endif

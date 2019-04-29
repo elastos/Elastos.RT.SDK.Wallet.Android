@@ -29,7 +29,7 @@ public interface ISubWalletCallback {
      */
     public void OnBlockSyncStopped();
 
-	public void OnBalanceChanged(long balance);
+	public void OnBalanceChanged(String asset, long balance);
 
 	/**
 	 * @param result is json result

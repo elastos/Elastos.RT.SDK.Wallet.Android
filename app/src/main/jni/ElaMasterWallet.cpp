@@ -111,36 +111,6 @@ static jlong JNICALL nativeCreateSubWallet(JNIEnv *env, jobject clazz, jlong jMa
 	return (jlong)subWallet;
 }
 
-#define SIG_nativeRecoverSubWallet "(JLjava/lang/String;IJ)J"
-static jlong JNICALL nativeRecoverSubWallet(JNIEnv *env, jobject clazz, jlong jMasterProxy,
-		jstring jChainID,
-		jint limitGap,
-		jlong jFeePerKb)
-{
-	bool exception = false;
-	std::string msgException;
-
-	const char* chainID = env->GetStringUTFChars(jChainID, NULL);
-
-	IMasterWallet *masterWallet = (IMasterWallet *)jMasterProxy;
-	ISubWallet *subWallet = NULL;
-
-	try {
-		subWallet = masterWallet->RecoverSubWallet(chainID, limitGap, jFeePerKb);
-	} catch (std::exception &e) {
-		exception = true;
-		msgException = e.what();
-	}
-
-	env->ReleaseStringUTFChars(jChainID, chainID);
-
-	if (exception) {
-		ThrowWalletException(env, msgException.c_str());
-	}
-
-	return (jlong)subWallet;
-}
-
 #define SIG_nativeDestroyWallet "(JJ)V"
 static void JNICALL nativeDestroyWallet(JNIEnv *env, jobject clazz, jlong jMasterProxy,
 		jlong jsubWalletProxy)
@@ -202,8 +172,8 @@ static jstring JNICALL nativeSign(JNIEnv *env, jobject clazz, jlong jMasterProxy
 	return result;
 }
 
-#define SIG_nativeCheckSign "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
-static /*nlohmann::json*/jstring JNICALL nativeCheckSign(JNIEnv *env, jobject clazz, jlong jMasterProxy,
+#define SIG_nativeCheckSign "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z"
+static jboolean JNICALL nativeCheckSign(JNIEnv *env, jobject clazz, jlong jMasterProxy,
 		jstring jaddress,
 		jstring jmessage,
 		jstring jsignature)
@@ -216,11 +186,10 @@ static /*nlohmann::json*/jstring JNICALL nativeCheckSign(JNIEnv *env, jobject cl
 	const char* signature = env->GetStringUTFChars(jsignature, NULL);
 
 	IMasterWallet *masterWallet = (IMasterWallet *)jMasterProxy;
-	jstring result = NULL;
+	jboolean result = false;
 
 	try {
-		nlohmann::json r = masterWallet->CheckSign(address, message, signature);
-		result = env->NewStringUTF(r.dump().c_str());
+		result = masterWallet->CheckSign(address, message, signature);
 	} catch (std::exception &e) {
 		exception = true;
 		msgException = e.what();
@@ -317,7 +286,6 @@ static const JNINativeMethod gMethods[] = {
 	REGISTER_METHOD(nativeGetBasicInfo),
 	REGISTER_METHOD(nativeGetAllSubWallets),
 	REGISTER_METHOD(nativeCreateSubWallet),
-	REGISTER_METHOD(nativeRecoverSubWallet),
 	REGISTER_METHOD(nativeDestroyWallet),
 	REGISTER_METHOD(nativeGetPublicKey),
 	REGISTER_METHOD(nativeSign),

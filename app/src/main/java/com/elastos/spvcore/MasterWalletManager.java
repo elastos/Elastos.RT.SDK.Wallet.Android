@@ -9,10 +9,6 @@ public class MasterWalletManager {
 	private long mManagerProxy = 0;
 	private String mRootPath = null;
 
-	/**
-	 * Constructor
-	 * @param rootPath specify directory for all config files, including mnemonic config files and peer connection config files. Root should not be empty, otherwise will throw invalid argument exception.
-	 */
 	public MasterWalletManager(String rootPath) {
 		mRootPath = rootPath;
 		mManagerProxy = nativeInitMasterWalletManager(mRootPath);
@@ -23,15 +19,6 @@ public class MasterWalletManager {
 		nativeDisposeNative(mManagerProxy);
 	}
 
-	/**
-	 * Create a new master wallet by mnemonic and phrase password, or return existing master wallet if current master wallet manager has the master wallet id.
-	 * @param masterWalletId is the unique identification of a master wallet object.
-	 * @param mnemonic use to generate seed which deriving the master private key and chain code.
-	 * @param phrasePassword combine with random seed to generate root key and chain code. Phrase password can be empty or between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param payPassword use to encrypt important things(such as private key) in memory. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param singleAddress singleAddress if true created wallet will have only one address inside, otherwise sub wallet will manager a chain of addresses for security.
-	 * @return If success will return a pointer of master wallet interface.
-	 */
 	public IMasterWallet CreateMasterWallet(String masterWalletId, String mnemonic,
 			String phrasePassword, String payPassword, boolean singleAddress) throws WalletException {
 
@@ -46,10 +33,6 @@ public class MasterWalletManager {
 		return new IMasterWallet(masterProxy);
 	}
 
-	/**
-	 * Get manager existing master wallets.
-	 * @return existing master wallet array.
-	 */
 	public ArrayList<IMasterWallet> GetAllMasterWallets() throws WalletException {
 
 		ArrayList<IMasterWallet> list = new ArrayList<IMasterWallet>();
@@ -62,19 +45,10 @@ public class MasterWalletManager {
 		return list;
 	}
 
-	/**
-	 * Get manager available master wallet ids.
-	 * @return available ids array.
-	 */
 	public String[] GetAllMasterWalletIds() throws WalletException {
 		return nativeGetAllMasterWalletIds(mManagerProxy);
 	}
 
-	/**
-	 * Get a master wallet object by id.
-	 * @param masterWalletId master wallet id.
-	 * @return master wallet object.
-	 */
 	public IMasterWallet GetWallet(String masterWalletId) throws WalletException {
 		long masterWalletProxy = nativeGetWallet(mManagerProxy, masterWalletId);
 
@@ -86,10 +60,6 @@ public class MasterWalletManager {
 		return new IMasterWallet(masterWalletProxy);
 	}
 
-	/**
-	 * Destroy a master wallet.
-	 * @param masterWalletId A pointer of master wallet interface create or imported by wallet factory object.
-	 */
 	public void DestroyWallet(String masterWalletId) throws WalletException {
 		nativeDestroyWallet(mManagerProxy, masterWalletId);
 	}
@@ -108,19 +78,11 @@ public class MasterWalletManager {
 		return new IMasterWallet(masterProxy);
 	}
 
-	/**
-	 * Import master wallet by key store file.
-	 * @param masterWalletId is the unique identification of a master wallet object.
-	 * @param keystoreContent specify key store content in json format.
-	 * @param backupPassword use to encrypt key store file. Backup password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param payPassword use to encrypt important things(such as private key) in memory. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @return If success will return a pointer of master wallet interface.
-	 */
 	public IMasterWallet ImportWalletWithKeystore(String masterWalletId, String keystoreContent,
-			String backupPassword, String payPassword) throws WalletException {
+			String backupPassWord, String payPassWord) throws WalletException {
 
 		long masterProxy = nativeImportWalletWithKeystore(mManagerProxy, masterWalletId,
-				keystoreContent, backupPassword, payPassword);
+				keystoreContent, backupPassWord, payPassWord);
 
 		if (masterProxy == 0) {
 			Log.e(TAG, "Import master wallet with key store fail");
@@ -130,20 +92,11 @@ public class MasterWalletManager {
 		return new IMasterWallet(masterProxy);
 	}
 
-	/**
-	 * Import master wallet by mnemonic.
-	 * @param masterWalletId is the unique identification of a master wallet object.
-	 * @param mnemonic for importing the master wallet.
-	 * @param phrasePassword combine with mnemonic to generate root key and chain code. Phrase password can be empty or between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param payPassword use to encrypt important things(such as private key) in memory. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param singleAddress singleAddress if true created wallet will have only one address inside, otherwise sub wallet will manager a chain of addresses for security.
-	 * @return If success will return a pointer of master wallet interface.
-	 */
 	public IMasterWallet ImportWalletWithMnemonic(String masterWalletId, String mnemonic,
-			String phrasePassword, String payPassword, boolean singleAddress) throws WalletException {
+			String phrasePassword, String payPassWord, boolean singleAddress) throws WalletException {
 
 		long masterProxy = nativeImportWalletWithMnemonic(mManagerProxy, masterWalletId,
-				mnemonic, phrasePassword, payPassword, singleAddress);
+				mnemonic, phrasePassword, payPassWord, singleAddress);
 
 		if (masterProxy == 0) {
 			Log.e(TAG, "Import master wallet with mnemonic fail");
@@ -153,74 +106,34 @@ public class MasterWalletManager {
 		return new IMasterWallet(masterProxy);
 	}
 
-	/**
-	 * Export key store content of the master wallet in json format.
-	 * @param masterWallet A pointer of master wallet interface create or imported by wallet factory object.
-	 * @param backupPassword use to decrypt key store file. Backup password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param payPassword use to decrypt and generate mnemonic temporarily. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @return If success will return key store content in json format.
-	 */
 	public String ExportWalletWithKeystore(IMasterWallet masterWallet,
-			String backupPassword, String payPassword) throws WalletException {
+			String backupPassWord, String payPassword) throws WalletException {
 
-		return nativeExportWalletWithKeystore(mManagerProxy, masterWallet, backupPassword, payPassword);
+		return nativeExportWalletWithKeystore(mManagerProxy, masterWallet, backupPassWord, payPassword);
 	}
 
-	/**
-	 * Export mnemonic of the master wallet.
-	 * @param masterWallet A pointer of master wallet interface create or imported by wallet factory object.
-	 * @param payPassword use to decrypt and generate mnemonic temporarily. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @return If success will return the mnemonic of master wallet.
-	 */
 	public String ExportWalletWithMnemonic(IMasterWallet masterWallet,
-			String payPassword) throws WalletException {
+			String payPassWord) throws WalletException {
 
-		return nativeExportWalletWithMnemonic(mManagerProxy, masterWallet, payPassword);
+		return nativeExportWalletWithMnemonic(mManagerProxy, masterWallet, payPassWord);
 	}
 
-	/**
-	 * Generate a mnemonic by random 128 entropy. We support English, Chinese, French, Italian, Japanese, and
-	 * 	Spanish 6 types of mnemonic currently.
-	 * @param language specify mnemonic language.
-	 * @return a random mnemonic.
-	 */
 	public String GenerateMnemonic(String language) throws WalletException {
 		return nativeGenerateMnemonic(mManagerProxy, language);
 	}
 
-	/**
-	 * Get public key for creating multi sign wallet with phrase.
-	 * @param phrase is something like mnemonic generated from GenerateMnemonic().
-	 * @param phrasePassword combine with random seed to generate root key and chain code. Phrase password can be empty or between 8 and 128, otherwise will throw invalid argument exception.
-	 * @return public key as expected.
-	 */
 	public String GetMultiSignPubKeyWithMnemonic(String phrase, String phrasePassword) throws WalletException {
 		return nativeGetMultiSignPubKeyWithMnemonic(mManagerProxy, phrase, phrasePassword);
 	}
 
-	/**
-	 * Get public key for creating multi sign wallet with private key.
-	 * @param privKey private key to do the sign job of related multi-sign accounts.
-	 * @return public key as expected.
-	 */
 	public String GetMultiSignPubKeyWithPrivKey(String privKey) throws WalletException {
 		return nativeGetMultiSignPubKeyWithPrivKey(mManagerProxy, privKey);
 	}
 
-	/**
-	 * Save local storage specifically. Note that the storage saving will be called automatically in destructor.
-	 */
 	public void SaveConfigs() {
 		nativeSaveConfigs(mManagerProxy);
 	}
 
-	/**
-	 * Create a multi-sign master wallet by mnemonic phrase password and related co-signers, or return existing master wallet if current master wallet manager has the master wallet id.
-	 * @param masterWallet is the unique identification of a master wallet object.
-	 * @param coSigners is an array of signers' public key
-	 * @param requiredSignCount specify minimum count to accomplish related transactions.
-	 * @return If success will return a pointer of master wallet interface.
-	 */
 	public IMasterWallet CreateMultiSignMasterWallet(String masterWallet,
 			String coSigners, int requiredSignCount) throws WalletException {
 
@@ -235,15 +148,6 @@ public class MasterWalletManager {
 		return new IMasterWallet(masterProxy);
 	}
 
-	/**
-	 * Create a multi-sign master wallet by mnemonic phrase password and related co-signers, or return existing master wallet if current master wallet manager has the master wallet id.
-	 * @param masterWallet is the unique identification of a master wallet object.
-	 * @param privKey private key to do the sign job of related multi-sign accounts.
-	 * @param payPassword use to encrypt important things(such as private key) in memory. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param coSigners is an array of signers' public key
-	 * @param requiredSignCount specify minimum count to accomplish related transactions.
-	 * @return If success will return a pointer of master wallet interface.
-	 */
 	public IMasterWallet CreateMultiSignMasterWallet(String masterWallet, String privKey, String payPassword,
 			String coSigners, int requiredSignCount) throws WalletException {
 
@@ -258,16 +162,6 @@ public class MasterWalletManager {
 		return new IMasterWallet(masterProxy);
 	}
 
-	/**
-	 * Create a multi-sign master wallet by private key and related co-signers, or return existing master wallet if current master wallet manager has the master wallet id.
-	 * @param masterWalletId is the unique identification of a master wallet object.
-	 * @param mnemonic use to generate seed which deriving the master private key and chain code.
-	 * @param phrasePassword combine with random seed to generate root key and chain code. Phrase password can be empty or between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param payPassword use to encrypt important things(such as private key) in memory. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
-	 * @param coSigners is an array of signers' public key.
-	 * @param requiredSignCount specify minimum count to accomplish related transactions.
-	 * @return If success will return a pointer of master wallet interface.
-	 */
 	public IMasterWallet CreateMultiSignMasterWallet(String masterWalletId, String mnemonic, String phrasePassword,
 			String payPassword, String coSigners, int requiredSignCount) throws WalletException {
 
